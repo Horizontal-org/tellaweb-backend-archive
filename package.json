@@ -1,0 +1,67 @@
+{
+  "name": "direct-upload-ts",
+  "description": "Direct Upload service and command line",
+  "version": "0.0.1",
+  "author": "marcos@hzontal.org",
+  "bin": {
+    "direct-upload-ts": "./bin/run"
+  },
+  "bugs": "https://github.com/horizontal-org/direct-upload-ts/issues",
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^3",
+    "bcryptjs": "^2.4.3",
+    "level": "^6.0.1",
+    "loglevel": "^1.7.1",
+    "tslib": "^1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/level-js": "^4.0.1",
+    "@types/node": "^10",
+    "eslint": "^5.13",
+    "eslint-config-oclif": "^3.1",
+    "eslint-config-oclif-typescript": "^0.1",
+    "globby": "^10",
+    "ts-node": "^8",
+    "typescript": "^3.3"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/horizontal-org/direct-upload-ts",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "GPL v3",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "direct-upload-ts",
+    "plugins": [
+      "@oclif/plugin-help"
+    ],
+    "topics": {
+      "auth": {
+        "description": "Manage user authentication."
+      }
+    }
+  },
+  "repository": "horizontal-org/direct-upload-ts",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
+}
