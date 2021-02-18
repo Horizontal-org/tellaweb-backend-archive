@@ -1,5 +1,6 @@
 import {validUsername} from '../application/user'
-import {UserAuth, AuthRepository, Logger} from '../types'
+import {UserAuth, AuthRepository, User, NotFoundError} from '../types/user'
+import {Logger} from '../types/application'
 import Level from 'level-js'
 import level from 'level'
 
@@ -22,9 +23,7 @@ export class AuthRepositoryClass implements AuthRepository {
   }
 
   update(user: UserAuth) {
-    return new Promise<boolean>((res, rej) => {
-      if (!validUsername(user.username)) rej(new Error('Invalid username'))
-
+    return new Promise<boolean>(res => {
       try {
         this.db.put(user.username, user, error => {
           if (error) return res(false)
@@ -37,7 +36,7 @@ export class AuthRepositoryClass implements AuthRepository {
     })
   }
 
-  delete(username: string) {
+  delete({username}: User) {
     return new Promise<boolean>(res => {
       try {
         this.db.del(username, error => {
@@ -69,12 +68,10 @@ export class AuthRepositoryClass implements AuthRepository {
     })
   }
 
-  read(username: string) {
+  read({username}: User) {
     return new Promise<UserAuth>((res, rej) => {
-      if (!validUsername(username)) rej(new Error('Invalid username'))
-
       this.db.get(username, (error, user?: UserAuth) => {
-        if (error !== null) return rej(error)
+        if (error !== null) return rej(NotFoundError)
         if (user) return res(user)
       })
     })

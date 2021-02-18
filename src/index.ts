@@ -2,9 +2,11 @@ import {flags, Command} from '@oclif/command'
 export {run} from '@oclif/command'
 import {createLogger} from './logger'
 import {AuthManagerClass} from './application/auth-manager'
-import {AuthRepositoryClass} from './repository/user-repository'
+import {AuthRepositoryClass} from './repository/auth-repository'
 import {Input, OutputArgs, OutputFlags} from '@oclif/parser'
-import {Client, Logger} from './types'
+import {Client} from './types/command'
+import {Logger} from './types/application'
+import {AuthRepositoryFs} from './repository/auth-repository-on-file'
 
 export default abstract class BaseCommand extends Command {
   exit(code?: number) {
@@ -19,6 +21,11 @@ export default abstract class BaseCommand extends Command {
     verbose: flags.boolean({
       char: 'l',
       env: 'VERBOSE',
+    }),
+    files: flags.string({
+      char: 'f',
+      env: 'FILES_DIR',
+      default: 'data',
     }),
     db: flags.string({
       char: 'd',
@@ -41,7 +48,8 @@ export default abstract class BaseCommand extends Command {
     this.parsedFlags = flags
 
     this.logger = createLogger(this.parsedFlags.verbose)
-    const ar = new AuthRepositoryClass(this.parsedFlags.db, this.logger)
+    const ar = new AuthRepositoryFs(this.parsedFlags.files, this.logger)
+    // const ar = new AuthRepositoryClass(this.parsedFlags.db, this.logger)
     const am = new AuthManagerClass(ar)
 
     this.client = {authManager: am}

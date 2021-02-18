@@ -25,9 +25,9 @@ export default class DeleteUser extends BaseCommand {
 
       if (!confirmation) this.exit(0)
 
-      const {error: deletedError} = await this.client.authManager.delete(
-        username
-      )
+      const [, deletedError] = await this.client.authManager.delete({
+        username,
+      })
 
       if (deletedError) throw deletedError
       this.logAndExit(`${username} deleted`)

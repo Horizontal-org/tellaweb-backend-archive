@@ -9,10 +9,10 @@ export default class ListUsers extends BaseCommand {
 
   async run() {
     this.logger.debug('Calling AuthManager.list')
-    const {data, error} = await this.client.authManager.list()
-    if (typeof data === 'undefined') this.logAndExit('Users not found', error)
+    const [users, error] = await this.client.authManager.list()
+    if (error) this.logAndExit('Users not found', error)
 
-    this.logAndExit(data!.join('\n'))
+    this.logAndExit(users!.map(({username}) => username).join('\n'))
     this.exit(0)
   }
 }

@@ -25,10 +25,10 @@ export default class AddUserName extends BaseCommand {
       })
       if (!password) throw new Error('Username and password are required')
 
-      const {error: addUserError} = await this.client.authManager.setPassword(
+      const [, addUserError] = await this.client.authManager.add({
         username,
-        password
-      )
+        password,
+      })
 
       if (addUserError) throw addUserError
 
