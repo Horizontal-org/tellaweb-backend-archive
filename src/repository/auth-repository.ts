@@ -1,4 +1,3 @@
-import {validUsername} from '../application/user'
 import {UserAuth, AuthRepository, User, NotFoundError} from '../types/user'
 import {Logger} from '../types/application'
 import Level from 'level-js'

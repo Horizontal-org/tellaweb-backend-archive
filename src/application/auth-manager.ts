@@ -15,7 +15,7 @@ import {
   validUserAndPassword,
 } from './user'
 
-export class AuthManagerClass implements AuthManager {
+export default class AuthManagerClass implements AuthManager {
   private authRepo: AuthRepository;
 
   constructor(authRepo: AuthRepository) {

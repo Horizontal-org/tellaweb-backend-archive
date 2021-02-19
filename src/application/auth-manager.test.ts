@@ -1,6 +1,5 @@
 import {AuthRepository} from '../types/user'
-import {AuthManagerClass} from './auth-manager'
-import log from 'logger'
+import AuthManagerClass from './auth-manager'
 import {
   mock,
   instance,

@@ -19,6 +19,10 @@ export default class DeleteUser extends BaseCommand {
     >
 
     try {
+      const [, notExist] = await this.client.authManager.hasUsername({
+        username,
+      })
+      if (notExist !== null) throw notExist
       const confirmation = await cli.confirm(
         'Are you sure you want to delete the user and all his data? (yes/no)'
       )
@@ -30,9 +34,9 @@ export default class DeleteUser extends BaseCommand {
       })
 
       if (deletedError) throw deletedError
-      this.logAndExit(`${username} deleted`)
+      this.log(`${username} deleted`)
     } catch (error) {
-      this.logAndExit(`Cant delete ${username}`, error)
+      this.error(`Cant delete ${username}`)
     }
   }
 }

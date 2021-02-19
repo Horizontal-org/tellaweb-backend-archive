@@ -32,9 +32,10 @@ export default class AddUserName extends BaseCommand {
 
       if (addUserError) throw addUserError
 
-      this.logAndExit(`User ${username} added`)
+      this.log(`User ${username} added`)
     } catch (error) {
-      this.logAndExit(`Cant add ${username}`, error)
+      this.logger.debug(error)
+      this.error(`Cant add ${username}`, error)
     }
   }
 }

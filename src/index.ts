@@ -1,8 +1,7 @@
 import {flags, Command} from '@oclif/command'
 export {run} from '@oclif/command'
 import {createLogger} from './logger'
-import {AuthManagerClass} from './application/auth-manager'
-import {AuthRepositoryClass} from './repository/auth-repository'
+import AuthManagerClass from './application/auth-manager'
 import {Input, OutputArgs, OutputFlags} from '@oclif/parser'
 import {Client} from './types/command'
 import {Logger} from './types/application'
@@ -53,12 +52,5 @@ export default abstract class BaseCommand extends Command {
     const am = new AuthManagerClass(ar)
 
     this.client = {authManager: am}
-  }
-
-  logAndExit(message: string, error?: Error) {
-    this.log(message)
-    if (error) this.logger.debug(error)
-
-    this.exit(error ? 1 : 0)
   }
 }

@@ -30,9 +30,9 @@ export default class ChangePassword extends BaseCommand {
 
       if (onChangeError) throw onChangeError
 
-      this.logAndExit('Password changed')
+      this.log('Password changed')
     } catch (error) {
-      this.logAndExit('Password could not be changed', error)
+      this.error('Password could not be changed')
     }
   }
 }

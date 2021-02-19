@@ -1,4 +1,4 @@
-import log from "loglevel";
+import * as log from "loglevel";
 
 export type Logger = typeof log;
 type ResponseOk<T> = [T, null];
