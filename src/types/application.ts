@@ -1,9 +1,11 @@
-import * as log from "loglevel";
+import {LogLevel} from 'loglevel'
 
-export type Logger = typeof log;
+export type Logger = LogLevel;
+
 type ResponseOk<T> = [T, null];
 type ResponseError = [null, Error];
 type Response<T> = ResponseOk<T> | ResponseError;
+
 export type BaseResponse<T> = Promise<Response<T>>;
 
 export type ServerOptions = {
