@@ -1,4 +1,4 @@
-import * as log from 'loglevel'
+import log from 'loglevel'
 
 export const createLogger = (verbose = false) => {
   if (verbose) log.setLevel(log.levels.DEBUG)

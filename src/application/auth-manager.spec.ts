@@ -10,6 +10,7 @@ import {
   anything,
 } from 'ts-mockito'
 import {getHash} from './user'
+import {expect} from 'chai'
 
 describe('Test AuthManager implementation', () => {
   const mockedAuthRepo: AuthRepository = mock<AuthRepository>()
@@ -31,67 +32,58 @@ describe('Test AuthManager implementation', () => {
     reset(mockedAuthRepo)
   })
 
-  it('should list the username and remove the password hash', async done => {
+  it('should list the username and remove the password hash', async () => {
     when(mockedAuthRepo.list()).thenResolve([testUserAuth])
 
     const [list, error] = await authManager.list()
-    expect(list).not.toBeNull()
-    expect(error).toBeNull()
-    expect(list!.length).toBe(1)
-    expect(list![0]).not.toHaveProperty('passwordHash')
-
-    done()
+    expect(list).not.to.be.null
+    expect(error).to.be.null
+    expect(list!.length).to.be.equal(1)
+    expect(list![0]).not.to.haveOwnProperty('passwordHash')
   })
 
-  it('should return an error if the repository fail listing the users', async done => {
+  it('should return an error if the repository fail listing the users', async () => {
     when(mockedAuthRepo.list()).thenThrow(new Error('file system error'))
 
     const [list, error] = await authManager.list()
-    expect(list).toBeNull()
-    expect(error).not.toBeNull()
-    expect(error!.message).toBe('file system error')
-
-    done()
+    expect(list).to.be.null
+    expect(error).not.to.be.null
+    expect(error!.message).to.be.equal('file system error')
   })
 
-  it('should find an user', async done => {
+  it('should find an user', async () => {
     const user = {username: testUser.username}
     when(mockedAuthRepo.read(deepEqual(user))).thenResolve(testUserAuth)
 
     const [exist, error] = await authManager.hasUsername(user)
 
-    expect(error).toBeNull()
-    expect(exist).toBeTruthy()
-
-    done()
+    expect(error).to.be.null
+    expect(exist).to.not.be.null
   })
 
-  it('should return an error if the requested user is not found', async done => {
+  it('should return an error if the requested user is not found', async () => {
     when(mockedAuthRepo.read(deepEqual(testUser))).thenReject(
       new Error('User not found')
     )
 
     const [exist, error] = await authManager.hasUsername(testUser)
 
-    expect(error).not.toBeNull()
-    expect(exist).toBeNull()
-    done()
+    expect(error).not.to.be.null
+    expect(exist).to.be.null
   })
 
-  it('should return an error if the user requested is invalid', async done => {
+  it('should return an error if the user requested is invalid', async () => {
     const invalidUser = {username: '!#"$%&"'}
     const [exist, error] = await authManager.hasUsername(invalidUser)
 
-    expect(error).not.toBeNull()
-    expect(error!.message).toBe('Invalid username')
-    expect(exist).toBeNull()
+    expect(error).not.to.be.null
+    expect(error!.message).to.be.equal('Invalid username')
+    expect(exist).to.be.null
 
     verify(mockedAuthRepo.read(deepEqual(invalidUser))).never()
-
-    done()
   })
 
-  it('should add a new user', async done => {
+  it('should add a new user', async () => {
     const NotFoundError = new Error()
     NotFoundError.name = 'NotFoundError'
     when(mockedAuthRepo.read(deepEqual(testUser))).thenThrow(NotFoundError)
@@ -100,16 +92,14 @@ describe('Test AuthManager implementation', () => {
 
     const [created, error] = await authManager.add(testUserAndPassword)
 
-    expect(error).toBeNull()
-    expect(created).toBeTruthy()
+    expect(error).to.be.null
+    expect(created).to.be.true
 
     verify(mockedAuthRepo.read(deepEqual(testUser))).once()
     verify(mockedAuthRepo.create(anything())).once()
-
-    done()
   })
 
-  it('should not add a duplicated user', async done => {
+  it('should not add a duplicated user', async () => {
     const newUser = {username: 'newusername', password: 'somesecurepassword'}
     when(
       mockedAuthRepo.read(deepEqual({username: newUser.username}))
@@ -120,27 +110,25 @@ describe('Test AuthManager implementation', () => {
 
     const [created, error] = await authManager.add(newUser)
 
-    expect(created).toBeNull()
-    expect(error).not.toBeNull()
-    expect(error!.message).toBe(`User ${newUser.username} already exist`)
-
-    done()
+    expect(created).to.be.null
+    expect(error).not.to.be.null
+    expect(error!.message).to.be.equal(
+      `User ${newUser.username} already exist`
+    )
   })
 
-  it('should not be able to add a user with an invalid username', async done => {
+  it('should not be able to add a user with an invalid username', async () => {
     const invalidUser = {username: '#$#"%$', password: 'somesecurepassword'}
 
     const [created, error] = await authManager.add(invalidUser)
 
-    expect(error).not.toBeNull()
-    expect(created).toBeNull()
+    expect(error).not.to.be.null
+    expect(created).to.be.null
 
     verify(mockedAuthRepo.read(anything())).never()
-
-    done()
   })
 
-  it('should delete an user', async done => {
+  it('should delete an user', async () => {
     when(mockedAuthRepo.read(anything())).thenResolve({
       username: 'u',
       passwordHash: 'p',
@@ -151,13 +139,11 @@ describe('Test AuthManager implementation', () => {
       username: 'usertodelete',
     })
 
-    expect(error).toBeNull()
-    expect(deleted).toBeTruthy()
-
-    done()
+    expect(error).to.be.null
+    expect(deleted).to.be.true
   })
 
-  it('should not be able to delete a user that not exist', async done => {
+  it('should not be able to delete a user that not exist', async () => {
     when(mockedAuthRepo.read(anything())).thenReject(
       new Error('User not found')
     )
@@ -166,13 +152,11 @@ describe('Test AuthManager implementation', () => {
       username: 'usertodelete',
     })
 
-    expect(error).not.toBeNull()
-    expect(deleted).toBeNull()
-
-    done()
+    expect(error).not.to.be.null
+    expect(deleted).to.be.null
   })
 
-  it('should change the user password', async done => {
+  it('should change the user password', async () => {
     when(mockedAuthRepo.read(anything())).thenResolve(testUserAuth)
     when(mockedAuthRepo.update(anything())).thenResolve(true)
 
@@ -180,13 +164,11 @@ describe('Test AuthManager implementation', () => {
       testUserAndPassword
     )
 
-    expect(error).toBeNull()
-    expect(changed).toBeTruthy()
-
-    done()
+    expect(error).to.be.null
+    expect(changed).to.be.true
   })
 
-  it('should not be able to change the password if the user not exist', async done => {
+  it('should not be able to change the password if the user not exist', async () => {
     when(mockedAuthRepo.read(anything())).thenReject(
       new Error('User not found')
     )
@@ -195,22 +177,18 @@ describe('Test AuthManager implementation', () => {
       testUserAndPassword
     )
 
-    expect(changed).toBeNull()
-    expect(error).not.toBeNull()
-
-    done()
+    expect(changed).to.be.null
+    expect(error).not.to.be.null
   })
 
-  it('should not be able to chenge the password if the password is invalid', async done => {
+  it('should not be able to chenge the password if the password is invalid', async () => {
     const [changed, error] = await authManager.changePassword({
       username: 'u',
       password: '##"#$!',
     })
 
     verify(mockedAuthRepo.read(anything())).never()
-    expect(changed).toBeNull()
-    expect(error).not.toBeNull()
-
-    done()
+    expect(changed).to.be.null
+    expect(error).not.to.be.null
   })
 })

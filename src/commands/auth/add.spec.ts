@@ -8,8 +8,8 @@ describe('auth:add', () => {
   })
 
   test
-  .stub(cli, 'prompt', () => async () => 'somesecurepassword1')
   .stdout()
+  .stub(cli, 'prompt', () => async () => 'somesecurepassword1')
   .command(['auth:add', '-u=testUser', '-d=testData', '-f=testData'])
   .it('add the username', ctx => {
     expect(ctx.stdout).to.contain('added')

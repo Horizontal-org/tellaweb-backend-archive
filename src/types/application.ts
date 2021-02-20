@@ -1,6 +1,6 @@
-import {LogLevel} from 'loglevel'
+import log from 'loglevel'
 
-export type Logger = LogLevel;
+export type Logger = typeof log;
 
 type ResponseOk<T> = [T, null];
 type ResponseError = [null, Error];

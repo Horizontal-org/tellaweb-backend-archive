@@ -1,6 +1,6 @@
 import {OutputFlags} from '@oclif/parser'
 import express from 'express'
-import {AuthManagerClass} from '../application/auth-manager'
+import AuthManagerClass from '../application/auth-manager'
 import {FileStorageClass} from '../repository/file-repository'
 import {ExpressServer} from '../server/http'
 import fs from 'fs'
@@ -58,7 +58,7 @@ export default class Server extends BaseCommand {
         serverOptions.cert = fs.readFileSync(flags.cert, 'utf8')
         serverOptions.key = fs.readFileSync(flags.key, 'utf8')
       } catch (error) {
-        this.logAndExit('Error loading the certificates', error)
+        this.error('Error loading the certificates')
       }
     }
     // Create and configure the server
