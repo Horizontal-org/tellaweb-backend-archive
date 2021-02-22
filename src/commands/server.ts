@@ -61,8 +61,6 @@ export default class Server extends BaseCommand {
         this.error('Error loading the certificates')
       }
     }
-    // Create and configure the server
-    const app = express()
 
     // Create the application
     const authManager = new AuthManagerClass(
@@ -71,8 +69,8 @@ export default class Server extends BaseCommand {
     const fileStore = new FileStorageClass({
       path: flags.files,
     })
-    const expressServer = new ExpressServer(authManager, fileStore, app)
-    expressServer.addRoutes()
+    const expressServer = new ExpressServer(authManager, fileStore)
+    const app = expressServer.getApp()
 
     // Run the server
     const [domain, port = 8080] = flags.address.split(':')

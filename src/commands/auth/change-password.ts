@@ -23,7 +23,7 @@ export default class ChangePassword extends BaseCommand {
       })
       if (!password) throw new Error('Username and password are required')
 
-      const [, onChangeError] = await this.client.authManager.checkPassword({
+      const [, onChangeError] = await this.client.authManager.changePassword({
         username,
         password,
       })

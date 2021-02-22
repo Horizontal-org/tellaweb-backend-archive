@@ -1,6 +1,6 @@
-import {ReadStream} from 'fs'
 import {BaseResponse} from './application'
 import {User} from './user'
+import {Stream} from 'stream'
 
 export type FileInfo = {
   name?: string;
@@ -23,7 +23,7 @@ export interface FileStorage {
   appendFile: (
     user: User,
     file: string,
-    stream: ReadStream
+    stream: Stream
   ) => BaseResponse<boolean>;
   closeFile: (user: User, file: string) => BaseResponse<boolean>;
 }

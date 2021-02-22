@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import {UserAndPassword} from '../types/user'
 
+const salt = process.env.SALT || '$2a$10$tW6.wi4sPPG4hM6ZULlM9e'
 // min 6 max 20 characters
 // no _ or i at the beginning
 // no __ or ._ or _. or .. inside
@@ -18,7 +19,6 @@ export const validUsername = (username: string): boolean =>
   usernameRegexpt.test(username)
 
 export const getHash = (password: string): string => {
-  const salt = bcrypt.genSaltSync(10)
   const hash = bcrypt.hashSync(password, salt)
   return hash
 }

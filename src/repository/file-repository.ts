@@ -4,11 +4,12 @@ import {
   LocalFileStorageConfig,
   LocalFile,
 } from '../types/files'
-import fs, {ReadStream} from 'fs'
+import fs from 'fs'
 import path from 'path'
 import {User} from '../types/user'
 import {BaseResponse} from '../types/application'
 import {streamToFile} from '../utils/stream-to-file'
+import {Stream} from 'stream'
 
 export class FileStorageClass implements FileStorage {
   private config: LocalFileStorageConfig;
@@ -82,7 +83,7 @@ export class FileStorageClass implements FileStorage {
   async appendFile(
     user: User,
     file: string,
-    stream: ReadStream
+    stream: Stream
   ): BaseResponse<boolean> {
     const [localFile, errorLocalFile] = await this.getLocalFile(user, file)
     if (errorLocalFile !== null) return [null, errorLocalFile]

@@ -49,10 +49,10 @@ export default class AuthManagerClass implements AuthManager {
   }: UserAndPassword): BaseResponse<boolean> {
     try {
       if (!validUserAndPassword({username, password}))
-        return [null, new Error('Invalid user or password')]
+        throw new Error('Invalid user or password')
 
       const [, notExist] = await this.hasUsername({username})
-      if (notExist) return [null, notExist]
+      if (notExist) throw notExist
 
       const [passwordHash, error] = await this.hashPassword(password)
       if (!passwordHash) throw new Error('Empty passwordHash')
@@ -76,7 +76,7 @@ export default class AuthManagerClass implements AuthManager {
       if (exist) throw new Error(`User ${username} already exist`)
 
       const [passwordHash, passwordError] = await this.hashPassword(password)
-      if (passwordError !== null) return [null, passwordError]
+      if (passwordError !== null) throw passwordError
 
       const created = await this.authRepo.create({
         username,

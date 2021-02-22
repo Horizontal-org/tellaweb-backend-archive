@@ -34,12 +34,14 @@
     "@types/mock-fs": "^4.13.0",
     "@types/node": "^14.14.27",
     "chai": "^4.3.0",
+    "chai-http": "^4.3.0",
     "eslint": "^5.13",
     "eslint-config-oclif": "^3.1",
     "eslint-config-oclif-typescript": "^0.1",
     "globby": "^10",
     "mocha": "^8.3.0",
     "mock-fs": "^4.13.0",
+    "nyc": "^15.1.0",
     "sinon": "^9.2.4",
     "ts-mocha": "^8.0.0",
     "ts-mockito": "^2.6.1",
@@ -77,8 +79,12 @@
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
-    "test": "ts-mocha -p tsconfig.json --recursive \"src/**/*.spec.ts\"" ,
+    "test": "ts-mocha -p tsconfig.json --recursive \"src/**/*.spec.ts\"",
+    "test-with-coverage": "nyc --reporter=text ts-mocha -p tsconfig.json --recursive \"src/**/*.spec.ts\"",
     "version": "oclif-dev readme && git add README.md"
   },
-  "types": "lib/index.d.ts"
+  "types": "lib/index.d.ts",
+  "nyc": {
+    "exclude": "**/*.spec.ts"
+  }
 }

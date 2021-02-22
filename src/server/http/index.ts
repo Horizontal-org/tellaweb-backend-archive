@@ -1,17 +1,11 @@
 import express from 'express'
-import {ReadStream} from 'fs'
 import {FileStorage} from '../../types/files'
 import {AuthManager} from '../../types/user'
-import connectBusboy from 'connect-busboy'
 import basicAuth from 'basic-auth-connect'
-
-interface BusBoyRequest extends express.Request {
-  busboy: busboy.Busboy;
-}
 
 interface HttpServer {
   handleHead: (req: express.Request, res: express.Response) => void;
-  handlePut: (req: BusBoyRequest, res: express.Response) => void;
+  handlePut: (req: express.Request, res: express.Response) => void;
   handlePost: (req: express.Request, res: express.Response) => void;
   handleDelete: (req: express.Request, res: express.Response) => void;
   addRoutes: (path: string) => void;
@@ -37,25 +31,25 @@ export class ExpressServer implements HttpServer {
 
   private app: express.Application;
 
-  constructor(
-    authManager: AuthManager,
-    fileStore: FileStorage,
-    app: express.Application
-  ) {
+  constructor(authManager: AuthManager, fileStore: FileStorage) {
     this.authManager = authManager
     this.fileStore = fileStore
-    this.app = app
+    this.app = express()
+    this.addRoutes()
   }
 
   addRoutes() {
     this.app
-    .use(connectBusboy())
     .use(basicAuth(this.authenticationCallback.bind(this)))
     .route('/:file')
     .head(this.handleHead.bind(this))
     .put(this.handlePut.bind(this))
     .post(this.handlePost.bind(this))
     .delete(this.handleDelete.bind(this))
+  }
+
+  getApp() {
+    return this.app
   }
 
   async handleHead(req: express.Request, res: express.Response) {
@@ -110,30 +104,21 @@ export class ExpressServer implements HttpServer {
     res.send()
   }
 
-  async handlePut(req: BusBoyRequest, res: express.Response) {
+  async handlePut(req: express.Request, res: express.Response) {
     const username = getUsername(req)
-
-    if (req.busboy) {
-      req.pipe(req.busboy)
-      req.busboy.on(
-        'file',
-        async (_: string, stream: ReadStream, fileName: string) => {
-          // Protect configuration files
-          if (fileName.startsWith('.')) {
-            res.statusCode = 500
-            res.send()
-            return
-          }
-
-          const [saved, error] = await this.fileStore.appendFile(
-            {username},
-            fileName,
-            stream
-          )
-          if (error || saved === false) res.statusCode = 500
-          res.send()
-        }
-      )
+    const fileName = req.params.file
+    if (fileName.startsWith('.')) {
+      res.statusCode = 500
+      res.send()
+      return
     }
+
+    const [saved, error] = await this.fileStore.appendFile(
+      {username},
+      fileName,
+      req
+    )
+    if (error || saved === false) res.statusCode = 500
+    res.send()
   }
 }
