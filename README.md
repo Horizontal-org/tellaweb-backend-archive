@@ -9,6 +9,7 @@ The server allows to use HTTPS with configurable domain and ports.
 ```sh-session
 $ git clone https://github.com/Horizontal-org/tellaweb-backend.git
 $ cd tellaweb-backend
+$ npm install
 $ ./bin/run COMMAND
 running command...
 $ ./bin/run (-v|--version|version)
