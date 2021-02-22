@@ -16,7 +16,7 @@ jobs:
       with:
         node-version: 14.x
 
-    - name: npm install, make test-coverage
+    - name: npm install and coverage
       run: |
         npm install
         npm run coverage
