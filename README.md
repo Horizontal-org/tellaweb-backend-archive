@@ -1,17 +1,21 @@
 [![Coverage Status](https://coveralls.io/repos/github/Horizontal-org/tellaweb-backend/badge.svg?branch=main)](https://coveralls.io/github/Horizontal-org/tellaweb-backend?branch=main)
 # Tella Web (backend)
+This package contains the backend for Tella Web and is compatible with direct-upload. It allows to manage the users via command line and to run the server for http access.
+The server allows to use HTTPS with configurable domain and ports.
+
 
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g tellaweb-backend
-$ tellaweb-backend COMMAND
+$ git clone https://github.com/Horizontal-org/tellaweb-backend.git
+$ cd tellaweb-backend
+$ ./bin/run COMMAND
 running command...
-$ tellaweb-backend (-v|--version|version)
+$ ./bin/run (-v|--version|version)
 tellaweb-backend/0.0.1 linux-x64 node-v14.15.4
-$ tellaweb-backend --help [COMMAND]
+$ ./bin/run --help [COMMAND]
 USAGE
-  $ tellaweb-backend COMMAND
+  $ ./bin/run COMMAND
 ...
 ```
 <!-- usagestop -->
@@ -31,7 +35,7 @@ About direct-upload and Horizontal
 
 ```
 USAGE
-  $ tellaweb-backend about
+  $ ./bin/run about
 ```
 
 _See code: [src/commands/about.ts](https://github.com/horizontal-org/tellaweb-backend/blob/v0.0.1/src/commands/about.ts)_
@@ -42,7 +46,7 @@ Add user authentication if doesn't already exist.
 
 ```
 USAGE
-  $ tellaweb-backend auth:add
+  $ ./bin/run auth:add
 
 OPTIONS
   -d, --db=db              [default: db]
@@ -59,7 +63,7 @@ Change user authentication. Will prompt for password
 
 ```
 USAGE
-  $ tellaweb-backend auth:change-password
+  $ ./bin/run auth:change-password
 
 OPTIONS
   -d, --db=db              [default: db]
@@ -76,7 +80,7 @@ Delete user authentication
 
 ```
 USAGE
-  $ tellaweb-backend auth:del
+  $ ./bin/run auth:del
 
 OPTIONS
   -d, --db=db              [default: db]
@@ -93,7 +97,7 @@ List usernames
 
 ```
 USAGE
-  $ tellaweb-backend auth:list
+  $ ./bin/run auth:list
 
 OPTIONS
   -d, --db=db        [default: db]
@@ -109,7 +113,7 @@ display help for tellaweb-backend
 
 ```
 USAGE
-  $ tellaweb-backend help [COMMAND]
+  $ ./bin/run help [COMMAND]
 
 ARGUMENTS
   COMMAND  command to show help for
@@ -126,7 +130,7 @@ Start Tella Direct Upload Server
 
 ```
 USAGE
-  $ tellaweb-backend server
+  $ ./bin/run server
 
 OPTIONS
   -a, --address=address    [default: :8080] address for server to bind to
