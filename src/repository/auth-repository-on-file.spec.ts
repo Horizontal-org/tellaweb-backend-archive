@@ -68,7 +68,7 @@ describe('Auth storage using files', () => {
       })
       expect(false).to.be.true // If call this is an error
     } catch (error) {
-      expect(error.message).to.be.equal(NotFoundError.message)
+      expect(error).to.be.equal(NotFoundError)
     }
   })
 

@@ -31,3 +31,17 @@ export interface AuthRepository {
 
 export const NotFoundError = new Error('User not found')
 NotFoundError.name = 'NotFoundError'
+
+export const InvalidPassword = new Error('Password invalid')
+InvalidPassword.name = 'InvalidPassword'
+
+export const InvalidUsername = new Error('Username invalid')
+InvalidUsername.name = 'InvalidUsername'
+
+export const InvalidUsernameOrPassword = new Error(
+  'Username or password are invalid'
+)
+InvalidUsernameOrPassword.name = 'InvalidUsernameOrPassword'
+
+export const DuplicatedUsername = new Error('Username already exist')
+DuplicatedUsername.name = 'DuplicatedUsername'

@@ -6,6 +6,10 @@ import {
   User,
   UserAndPassword,
   UserAuth,
+  InvalidUsername,
+  InvalidUsernameOrPassword,
+  DuplicatedUsername,
+  InvalidPassword,
 } from '../types/user'
 import {BaseResponse} from '../types/application'
 import {
@@ -23,8 +27,8 @@ export default class AuthManagerClass implements AuthManager {
   }
 
   async hasUsername({username}: User): BaseResponse<UserAuth> {
-    if (!validUsername(username)) return [null, new Error('Invalid username')]
     try {
+      if (!validUsername(username)) throw InvalidUsername
       const user = await this.authRepo.read({username})
       return [user, null]
     } catch (error) {
@@ -49,16 +53,18 @@ export default class AuthManagerClass implements AuthManager {
   }: UserAndPassword): BaseResponse<boolean> {
     try {
       if (!validUserAndPassword({username, password}))
-        throw new Error('Invalid user or password')
+        throw InvalidUsernameOrPassword
 
       const [, notExist] = await this.hasUsername({username})
       if (notExist) throw notExist
 
       const [passwordHash, error] = await this.hashPassword(password)
-      if (!passwordHash) throw new Error('Empty passwordHash')
-      if (error) throw error
+      if (error !== null) throw error
 
-      const updated = await this.authRepo.update({username, passwordHash})
+      const updated = await this.authRepo.update({
+        username,
+        passwordHash: passwordHash!,
+      })
       return [updated, null]
     } catch (error) {
       return [null, error]
@@ -67,16 +73,18 @@ export default class AuthManagerClass implements AuthManager {
 
   async add({username, password}: UserAndPassword): BaseResponse<boolean> {
     try {
-      if (!validUsername(username)) throw new Error('Invalid username')
+      if (!validUsername(username)) throw InvalidUsername
       const [exist, existError] = await this.hasUsername({
         username,
       })
       if (existError && existError.name !== NotFoundError.name)
         throw existError
-      if (exist) throw new Error(`User ${username} already exist`)
+      if (exist) throw DuplicatedUsername
 
-      const [passwordHash, passwordError] = await this.hashPassword(password)
-      if (passwordError !== null) throw passwordError
+      const [passwordHash, passwordHashError] = await this.hashPassword(
+        password
+      )
+      if (passwordHashError !== null) throw passwordHashError
 
       const created = await this.authRepo.create({
         username,
@@ -94,7 +102,7 @@ export default class AuthManagerClass implements AuthManager {
   }: UserAndPassword): BaseResponse<boolean> {
     try {
       if (!validUserAndPassword({username, password}))
-        throw new Error('User or password invalids')
+        throw InvalidUsernameOrPassword
       const userAuth = await this.authRepo.read({username})
       const validation = bcrypt.compareSync(password, userAuth.passwordHash)
       return [validation === true, null]
@@ -115,7 +123,7 @@ export default class AuthManagerClass implements AuthManager {
 
   private async hashPassword(password: string): BaseResponse<string> {
     try {
-      if (!validPassword(password)) throw new Error('Invalid password')
+      if (!validPassword(password)) throw InvalidPassword
       const hash = getHash(password)
       return [hash, null]
     } catch (error) {
