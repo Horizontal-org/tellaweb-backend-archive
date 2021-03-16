@@ -27,6 +27,7 @@ USAGE
 * [`tellaweb-backend auth:change-password`](#tellaweb-backend-authchange-password)
 * [`tellaweb-backend auth:del`](#tellaweb-backend-authdel)
 * [`tellaweb-backend auth:list`](#tellaweb-backend-authlist)
+* [`tellaweb-backend auth:role`](#tellaweb-backend-authrole)
 * [`tellaweb-backend help [COMMAND]`](#tellaweb-backend-help-command)
 * [`tellaweb-backend server`](#tellaweb-backend-server)
 
@@ -107,6 +108,23 @@ OPTIONS
 ```
 
 _See code: [src/commands/auth/list.ts](https://github.com/horizontal-org/tellaweb-backend/blob/v0.0.1/src/commands/auth/list.ts)_
+
+## `./bin/run auth:role`
+
+Change user role
+
+```
+USAGE
+  $ tellaweb-backend auth:role
+
+OPTIONS
+  -d, --db=db              [default: db]
+  -f, --files=files        [default: data]
+  -l, --verbose
+  -u, --username=username  (required)
+```
+
+_See code: [src/commands/auth/role.ts](https://github.com/horizontal-org/tellaweb-backend/blob/v0.0.1/src/commands/auth/role.ts)_
 
 ## `tellaweb-backend help [COMMAND]`
 

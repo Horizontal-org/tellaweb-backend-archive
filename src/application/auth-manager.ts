@@ -140,7 +140,7 @@ export default class AuthManagerClass implements AuthManager {
   async isAdmin(user: User): BaseResponse<boolean> {
     try {
       const userAuth = await this.authRepo.read(user)
-      return [userAuth.isAdmin, null]
+      return [userAuth.isAdmin === true, null]
     } catch (error) {
       return [null, error]
     }
