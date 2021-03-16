@@ -121,6 +121,31 @@ export default class AuthManagerClass implements AuthManager {
     }
   }
 
+  async setAdministratorPermits(
+    {username}: User,
+    status = false
+  ): BaseResponse<boolean> {
+    try {
+      const userAuth = await this.authRepo.read({username})
+      userAuth.isAdmin = status
+
+      const saved = await this.authRepo.update(userAuth)
+
+      return [saved, null]
+    } catch (error) {
+      return [null, error]
+    }
+  }
+
+  async isAdmin(user: User): BaseResponse<boolean> {
+    try {
+      const userAuth = await this.authRepo.read(user)
+      return [userAuth.isAdmin, null]
+    } catch (error) {
+      return [null, error]
+    }
+  }
+
   private async hashPassword(password: string): BaseResponse<string> {
     try {
       if (!validPassword(password)) throw InvalidPassword

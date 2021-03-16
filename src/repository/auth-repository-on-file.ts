@@ -68,6 +68,7 @@ export class AuthRepositoryFs implements AuthRepository {
           res({
             username: jsondata.username,
             passwordHash: jsondata.passwordHash,
+            isAdmin: jsondata.isAdmin === true,
           })
         else throw NotFoundError
       } catch (error) {

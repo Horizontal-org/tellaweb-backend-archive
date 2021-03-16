@@ -177,6 +177,7 @@ describe('Test AuthManager implementation', () => {
   })
 
   it('should not be able to chenge the password if the password is invalid', async () => {
+    when(mockedAuthRepo.read(anything())).thenReject(NotFoundError)
     const [changed, error] = await authManager.changePassword({
       username: 'u',
       password: '##"#$!',
@@ -185,5 +186,35 @@ describe('Test AuthManager implementation', () => {
     verify(mockedAuthRepo.read(anything())).never()
     expect(changed).to.be.null
     expect(error).not.to.be.null
+  })
+
+  it('should be able to add administrative permision to any user', async () => {
+    when(mockedAuthRepo.read(anything())).thenResolve(testUserAuth)
+    when(mockedAuthRepo.update(anything())).thenResolve(true)
+
+    const isAdmin = true
+    const [added, error] = await authManager.setAdministratorPermits(
+      testUser,
+      isAdmin
+    )
+
+    expect(added).to.be.true
+    expect(error).to.be.null
+
+    verify(
+      mockedAuthRepo.update(deepEqual({...testUserAuth, isAdmin}))
+    ).once()
+  })
+
+  it('should be able to return the user role', async () => {
+    when(mockedAuthRepo.read(anything())).thenResolve({
+      ...testUserAuth,
+      isAdmin: false,
+    })
+
+    const [isAdmin, error] = await authManager.isAdmin(testUser)
+
+    expect(isAdmin).to.be.false
+    expect(error).to.be.null
   })
 })
