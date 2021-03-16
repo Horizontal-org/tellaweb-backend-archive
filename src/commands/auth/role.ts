@@ -18,7 +18,7 @@ export default class RoleUser extends BaseCommand {
       const [isAdmin, adminError] = await this.client.authManager.isAdmin({
         username,
       })
-      console.log(isAdmin)
+
       if (adminError) throw adminError
 
       const toggleRole = !isAdmin
