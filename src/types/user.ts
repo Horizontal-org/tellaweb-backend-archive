@@ -8,9 +8,12 @@ export interface UserAndPassword extends User {
   password: string;
 }
 
-export interface UserAuth extends User {
-  passwordHash: string;
+export interface UserAndRole extends User {
   isAdmin?: boolean;
+}
+
+export interface UserAuth extends UserAndRole {
+  passwordHash: string;
 }
 
 export interface AuthManager {
@@ -20,7 +23,7 @@ export interface AuthManager {
   changePassword: (data: UserAndPassword) => BaseResponse<boolean>;
   delete: (data: User) => BaseResponse<boolean>;
   checkPassword: (data: UserAndPassword) => BaseResponse<boolean>;
-  list: () => BaseResponse<User[]>;
+  list: () => BaseResponse<UserAndRole[]>;
   setAdministratorPermits: (
     data: User,
     status: boolean

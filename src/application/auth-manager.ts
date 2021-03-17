@@ -10,6 +10,7 @@ import {
   InvalidUsernameOrPassword,
   DuplicatedUsername,
   InvalidPassword,
+  UserAndRole,
 } from '../types/user'
 import {BaseResponse} from '../types/application'
 import {
@@ -111,10 +112,13 @@ export default class AuthManagerClass implements AuthManager {
     }
   }
 
-  async list(): BaseResponse<User[]> {
+  async list(): BaseResponse<UserAndRole[]> {
     try {
       const users = await this.authRepo.list()
-      const usernames = users.map(({username}) => ({username}))
+      const usernames = users.map(({username, isAdmin}) => ({
+        username,
+        isAdmin,
+      }))
       return [usernames, null]
     } catch (error) {
       return [null, error]
