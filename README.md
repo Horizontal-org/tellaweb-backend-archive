@@ -1,3 +1,5 @@
+## **Deprecated - This repository was used as a proof of concept. Current development is at https://github.com/Horizontal-org/tellaweb-nestjs**
+
 [![Coverage Status](https://coveralls.io/repos/github/Horizontal-org/tellaweb-backend/badge.svg?branch=main)](https://coveralls.io/github/Horizontal-org/tellaweb-backend?branch=main)
 # Tella Web (backend)
 This package contains the backend for Tella Web and is compatible with direct-upload. It allows to manage the users via command line and to run the server for http access.
